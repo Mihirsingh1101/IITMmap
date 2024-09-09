@@ -1,10 +1,31 @@
-import logo from './logo.svg';
 import './App.css';
+import ModelView from './pages/modelView';
+import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import ResponsiveAppBar from './components/ResponsiveAppBar';
+import AnchorTemporaryDrawer from './components/AnchorTemporaryDrawer';
+ 
 
 function App() {
   return (
     <div className="App">
-      <div> hello world</div>
+      <ResponsiveAppBar/>
+      <AnchorTemporaryDrawer/>
+       <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={2}>
+        <Grid size={8}>
+          firsts
+        <ModelView/>
+        </Grid>
+        <Grid size={4}>
+          other filds
+        </Grid>
+         
+      </Grid>
+    </Box>
+     
     </div>
   );
 }
