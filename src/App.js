@@ -16,11 +16,9 @@ function App() {
        <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid size={8}>
-          firsts
         <ModelView/>
         </Grid>
         <Grid size={4}>
-          other filds
         </Grid>
          
       </Grid>
