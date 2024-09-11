@@ -8,3 +8,14 @@
   display: flex;
   flex-grow: 1;
 }
+
+.logo {
+  width: 120px;
+  height: 90px;
+}
+
+.center-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

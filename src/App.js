@@ -1,22 +1,23 @@
 import React from 'react';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import Map from './components/Map';
-import LocationInfo from './components/LocationInfo';
-import Footer from './components/Footer';
+import ResponsiveAppBar from './components/ResponsiveAppBar'
+import AnchorTemporaryDrawer from './components/AnchorTemporaryDrawer';
+import ModelView from './pages/modelView';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid2';
 import './App.css';
+import Header from './components/Header';
 
 function App() {
   return (
     <div className="App">
-      <ResponsiveAppBar/>
+      <Header /> 
       <AnchorTemporaryDrawer/>
        <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
-        <Grid size={8}>
+        <Grid item xs={8}> // Changed from size to item xs
         <ModelView/>
         </Grid>
-        <Grid size={4}>
+        <Grid item xs={4}> // Changed from size to item xs
         </Grid>
          
       </Grid>
