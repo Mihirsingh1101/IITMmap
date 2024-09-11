@@ -63,19 +63,20 @@ export default function AnchorTemporaryDrawer() {
   );
 
   return (
-    <div>
-      {['left', 'right', 'top', 'bottom'].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
-          <Drawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-          >
-            {list(anchor)}
-          </Drawer>
-        </React.Fragment>
-      ))}
-    </div>
+    <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', marginTop: '5px',}}>
+  {['Building', 'Canteens', 'Emergency Features', 'Sports', 'Messes'].map((anchor, index) => (
+    <React.Fragment key={index}>
+      <Button onClick={() => toggleDrawer(anchor, true)}>{anchor}</Button>
+      <Drawer
+        anchor="left" // or "right", depending on where you want the drawer to appear
+        open={state[anchor]}
+        onClose={() => toggleDrawer(anchor, false)}
+      >
+        {list(anchor)}
+      </Drawer>
+    </React.Fragment>
+  ))}
+</div>
+
   );
 }
