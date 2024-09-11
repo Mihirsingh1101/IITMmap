@@ -53,16 +53,67 @@ const buildingCoordinates = {
   'DRONGO_CANTEEN': [-110, 35, 150],
   'CAFE O MOCHA': [-305, 15, 100],
   'SUPERMARKET': [-315, 10, 110],
+  'ROBOTRONICS_LAB(4TH-F-A18)': [105, 40, 140],
+  'MANAS_LAB(4TH-F-A18)': [105, 40, 140],
+  'ACS_LAB(4TH-F-A18)': [105, 40, 140],
+  'A-18-2A(3RD-F-A18)': [105, 40, 140],
+  'IKSHMA_CLASSROOM(3RD-F-A18)': [105, 40, 140],
+  'SCEE-INFO-LAB(3RD-F-A18)': [105, 40, 140],
+  'SP_COM_LAB(2ND-F-A18)': [105, 40, 140],
+  'VLSI_LAB(2ND-F-A18)': [105, 40, 140],
+  'A18-A1(1ST-F-A18)': [105, 40, 140],
+  'SCEE_CONF-ROOM(1ST-F-A18)': [105, 40, 140],
+  'DATA_SCIENCE_LAB(1ST-F-A18)': [105, 40, 140],
+  'CHEMISTRY_LAB(1ST-F-A18)': [105, 40, 140],
+  'SCEE_ELECTRONIC_LAB(GROUND_F-A18)': [105, 40, 140],
+  'A-17-1-A(GROUND-F-A17)': [105, 40, 110],
+  'A-17-1-B(GROUND-F-A17)': [105, 40, 110],
+  'A-17-1-D(GROUND-F-A17)': [105, 40, 110],
+  'A-17-1-C(GROUND-F-A17)': [105, 40, 110],
+  'A-17-1-E(GROUND-F-A17)': [105, 40, 110],
+  'A-17-2-A(1ST-F-A17)': [105, 40, 110],
+  'A-17-2-B(1ST-F-A17)': [105, 40, 110],
+  'A-17-2-C(1ST-F-A17)': [105, 40, 110],
+  'A-17-2-D(1ST-F-A17)': [105, 40, 110],
+  'A-17-2-E(1ST-F-A17)': [105, 40, 110],
+  'CSP_LAB(2ND-F-A17)': [105, 40, 110],
+  'SCEE_OFFICE(2ND-F-A17)': [105, 40, 110],
+  'SCEE_CHAIRPERSON_ROOM(2ND-F-A17)': [105, 40, 110],
+  'MIC_LAB(3RD-F-A17)': [105, 40, 110],
+  'MIC_LAB(3RD-F-A17)': [105, 40, 110],
+  'PHOTONICS_LAB(3RD-F-A17)': [105, 40, 110],
+  'NSS(1ST_F_A19)': [165, 30, 95],
+  'YANTRIK_CLUB(1ST_F_A19)': [165, 30, 95],
+  'ROBOTRONICS_CLUB(1ST_F_A19)': [165, 30, 95],
+  'E-CELL(1ST_F_A19)': [165, 30, 95],
+  'STAC_CLUB(1ST_F_A19)': [165, 30, 95],
+  'KAMAND_PROMPT_CLUB(1ST_F_A19)': [165, 30, 95],
+  'HNT_CLUB(1ST_F_A19)': [165, 30, 95],
+  'NIRMAAN_CLUB(1ST_F_A19)': [165, 30, 95],
+  'KAMAND_BIO_CLUB(1ST_F_A19)': [165, 30, 95],
+  'TECHNICAL_OFFICE(1ST_F_A19)': [165, 30, 95],
+  'DESIGNAUTS_CLUB(2ND_F_A19)': [165, 30, 95],
+  'WRITING_CLUB(2ND_F_A19)': [165, 30, 95],
+  'ART_GREEKS_CLUB(2ND_F_A19)': [165, 30, 95],
+  'DEBATING_AND_QUIZZING_CLUB(2ND_F_A19)': [165, 30, 95],
+  'GYMKHANA_MEETING_ROOM(2ND_F_A19)': [165, 30, 95],
+  'PMC_CLUB(2ND_F_A19)': [165, 30, 95],
+  'MUSIC_CLUB(2ND_F_A19)': [165, 30, 95],
+  'SPICMACAY_CLUB(2ND_F_A19)': [165, 30, 95],
+  
+  
+
 }
 
-function CoordinateMarker({ position, color }) {
+function CoordinateMarker({ position, color, isSelected }) {
   return (
     <mesh position={position}>
-      <tetrahedronGeometry args={[5,4]} /> {/* Tetrahedron with radius 5 */}
-      <meshBasicMaterial color={color} /> {/* Marker color (unique for each) */}
+      <tetrahedronGeometry args={[isSelected ? 8 : 5, 4]} /> {/* Increase size if selected */}
+      <meshBasicMaterial color={isSelected ? 'red' : color} /> {/* Highlight color if selected */}
     </mesh>
   );
 }
+
 
 function Model() {
   const { scene } = useGLTF('/static/mapMI.glb'); // Ensure the path to the model is correct
@@ -90,9 +141,12 @@ function CameraControls({ targetPosition }) {
 
       let frame = 0;
       const totalFrames = 60;
+
       const animateCamera = () => {
         frame++;
-        camera.position.lerp(newCameraPosition, frame / totalFrames);  // Smooth transition
+        const easedFrame = THREE.MathUtils.smoothstep(frame / totalFrames, 0, 1); // Smooth transition
+
+        camera.position.lerp(newCameraPosition, easedFrame);
         camera.lookAt(...targetPosition);
 
         if (frame < totalFrames) {
@@ -117,16 +171,21 @@ function ModelView() {
   const [fromPosition, setFromPosition] = useState(null);
   const [toPosition, setToPosition] = useState(null);
   const [targetPosition, setTargetPosition] = useState(null);
+  const [selectedBuilding, setSelectedBuilding] = useState(null); // State to track selected building
 
+  // Debounced search handler
   const handleFromChange = useCallback((event) => {
     const value = event.target.value;
     setFromBuilding(value);
 
     if (value) {
-      const filteredSuggestions = Object.keys(buildingCoordinates).filter((key) =>
-        key.toLowerCase().includes(value.toLowerCase())
-      );
-      setFromSuggestions(filteredSuggestions);
+      const debounceTimeout = setTimeout(() => {
+        const filteredSuggestions = Object.keys(buildingCoordinates).filter((key) =>
+          key.toLowerCase().includes(value.toLowerCase())
+        );
+        setFromSuggestions(filteredSuggestions);
+      }, 300);  // 300ms debounce
+      return () => clearTimeout(debounceTimeout);  // Clear the timeout if input changes again
     } else {
       setFromSuggestions([]);
     }
@@ -137,10 +196,13 @@ function ModelView() {
     setToBuilding(value);
 
     if (value) {
-      const filteredSuggestions = Object.keys(buildingCoordinates).filter((key) =>
-        key.toLowerCase().includes(value.toLowerCase())
-      );
-      setToSuggestions(filteredSuggestions);
+      const debounceTimeout = setTimeout(() => {
+        const filteredSuggestions = Object.keys(buildingCoordinates).filter((key) =>
+          key.toLowerCase().includes(value.toLowerCase())
+        );
+        setToSuggestions(filteredSuggestions);
+      }, 300);  // 300ms debounce
+      return () => clearTimeout(debounceTimeout);  // Clear the timeout if input changes again
     } else {
       setToSuggestions([]);
     }
@@ -153,6 +215,7 @@ function ModelView() {
     if (position) {
       setFromPosition(position);
       setTargetPosition(position);
+      setSelectedBuilding(suggestion); // Set the selected building
     }
   };
 
@@ -163,6 +226,7 @@ function ModelView() {
     if (position) {
       setToPosition(position);
       setTargetPosition(position);
+      setSelectedBuilding(suggestion); // Set the selected building
     }
   };
 
@@ -171,13 +235,18 @@ function ModelView() {
       {/* Stylish Search Bar Container */}
       <div style={{ position: 'absolute', right: '0px', top: '50%', transform: 'translateY(-50%)', width: '250px' }}>
         <div style={{ marginBottom: '20px', position: 'relative' }}>
-          <input
-            type="text"
-            value={fromBuilding}
-            onChange={handleFromChange}
-            placeholder="From (e.g., B8)"
-            style={searchBarStyle}
-          />
+        <input
+        type="text"
+        value={fromBuilding}
+        onChange={handleFromChange}
+        placeholder="From (e.g., B8)"
+        style={searchBarStyle}
+        onKeyDown={(e) => {
+        if (e.key === 'Enter' && fromSuggestions.length > 0) {
+        handleFromSuggestionClick(fromSuggestions[0]); // Automatically select the first suggestion on Enter
+        }
+      }}
+/>
           {fromSuggestions.length > 0 && (
             <ul style={suggestionsStyle}>
               {fromSuggestions.map((suggestion) => (
@@ -194,13 +263,18 @@ function ModelView() {
         </div>
 
         <div style={{ marginBottom: '10px', position: 'relative' }}>
-          <input
-            type="text"
-            value={toBuilding}
-            onChange={handleToChange}
-            placeholder="To (e.g., B12)"
-            style={searchBarStyle}
-          />
+        <input
+        type="text"
+        value={toBuilding}
+        onChange={handleToChange}
+        placeholder="To (e.g., B12)"
+        style={searchBarStyle}
+        onKeyDown={(e) => {
+        if (e.key === 'Enter' && toSuggestions.length > 0) {
+        handleToSuggestionClick(toSuggestions[0]); // Automatically select the first suggestion on Enter
+    }
+  }}
+/>
           {toSuggestions.length > 0 && (
             <ul style={suggestionsStyle}>
               {toSuggestions.map((suggestion) => (
@@ -218,11 +292,23 @@ function ModelView() {
       </div>
 
       <Canvas style={{ height: '70vh', width: '60vw' }}>
-        <ambientLight intensity={0.7} />
+        <ambientLight intensity={1} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <Model />
-        {fromPosition && <CoordinateMarker position={fromPosition} color="yellow" />}
-        {toPosition && <CoordinateMarker position={toPosition} color="white" />}
+        {fromPosition && (
+        <CoordinateMarker
+        position={fromPosition}
+        color="yellow"
+        isSelected={selectedBuilding === fromBuilding} // Compare with selected building
+          />
+            )}
+        {toPosition && (
+         <CoordinateMarker
+        position={toPosition}
+        color="white"
+        isSelected={selectedBuilding === toBuilding} // Compare with selected building
+       />
+        )}
         <CameraControls targetPosition={targetPosition} />
       </Canvas>
     </div>
@@ -268,19 +354,6 @@ const suggestionItemStyle = {
   borderRadius: '10px', // Subtle rounding for each item
   fontSize: '16px', // Larger font for readability
   color: '#555', // Slightly darker text
-};
-
-// Adding hover effect for suggestion items
-const suggestionItemHoverStyle = {
-  backgroundColor: '#f0f0f0', // Lighter hover background
-  color: '#333', // Darker text on hover
-};
-
-// Adding focus and hover effects to the search bar
-const searchBarHoverStyle = {
-  ...searchBarStyle,
-  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.2)', // Increased shadow on hover/focus
-  border: '1px solid #aaa', // Darker border on hover/focus
 };
 
 export default ModelView;
