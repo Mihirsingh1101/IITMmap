@@ -65,7 +65,7 @@ function CoordinateMarker({ position, color }) {
 }
 
 function Model() {
-  const { scene } = useGLTF('/static/mapMI.glb'); // Ensure the path to the model is correct
+  const { scene } = useGLTF('/static/map2NOTREE.glb'); // Ensure the path to the model is correct
   return <primitive object={scene} />;
 }
 
@@ -217,8 +217,8 @@ function ModelView() {
         </div>
       </div>
 
-      <Canvas style={{ height: '70vh', width: '60vw' }}>
-        <ambientLight intensity={0.7} />
+      <Canvas style={{ height: '70vh', width: '60vw',paddingLeft:'320px' }}>
+        <ambientLight intensity={1} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <Model />
         {fromPosition && <CoordinateMarker position={fromPosition} color="yellow" />}
