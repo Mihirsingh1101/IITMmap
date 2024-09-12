@@ -5,14 +5,12 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import ResponsiveAppBar from './components/ResponsiveAppBar';
-import AnchorTemporaryDrawer from './components/AnchorTemporaryDrawer';
  
 
 function App() {
   return (
     <div className="App">
       <ResponsiveAppBar/>
-      <AnchorTemporaryDrawer/>
        <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid size={8}>
