@@ -3,7 +3,6 @@ import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';  // Import THREE for vector operations
 
-
  
 // Coordinates mapping for buildings
 const buildingCoordinates = {
@@ -29,7 +28,7 @@ const buildingCoordinates = {
   'B25': [130, 30, 60],
   'A19': [165, 30, 95],
   'A17': [105, 40, 110],
-  'A18': [105, 40, 140],
+  'A18': [105, 50, 140],
   'A13': [-15, 35, 166],
   'A14': [-30, 35, 206],
   'A11': [-130, 40, 240],
@@ -53,19 +52,19 @@ const buildingCoordinates = {
   'DRONGO_CANTEEN': [-110, 35, 150],
   'CAFE O MOCHA': [-305, 15, 100],
   'SUPERMARKET': [-315, 10, 110],
-  'ROBOTRONICS_LAB(4TH-F-A18)': [105, 40, 140],
-  'MANAS_LAB(4TH-F-A18)': [105, 40, 140],
-  'ACS_LAB(4TH-F-A18)': [105, 40, 140],
-  'A-18-2A(3RD-F-A18)': [105, 40, 140],
-  'IKSHMA_CLASSROOM(3RD-F-A18)': [105, 40, 140],
-  'SCEE-INFO-LAB(3RD-F-A18)': [105, 40, 140],
-  'SP_COM_LAB(2ND-F-A18)': [105, 40, 140],
-  'VLSI_LAB(2ND-F-A18)': [105, 40, 140],
-  'A18-A1(1ST-F-A18)': [105, 40, 140],
-  'SCEE_CONF-ROOM(1ST-F-A18)': [105, 40, 140],
-  'DATA_SCIENCE_LAB(1ST-F-A18)': [105, 40, 140],
-  'CHEMISTRY_LAB(1ST-F-A18)': [105, 40, 140],
-  'SCEE_ELECTRONIC_LAB(GROUND_F-A18)': [105, 40, 140],
+  'ROBOTRONICS_LAB(4TH-F-A18)': [105, 50, 140],
+  'MANAS_LAB(4TH-F-A18)': [105, 50, 140],
+  'ACS_LAB(4TH-F-A18)': [105, 50, 140],
+  'A-18-2A(3RD-F-A18)': [105, 50, 140],
+  'IKSHMA_CLASSROOM(3RD-F-A18)': [105, 50, 140],
+  'SCEE-INFO-LAB(3RD-F-A18)': [105, 50, 140],
+  'SP_COM_LAB(2ND-F-A18)': [105, 50, 140],
+  'VLSI_LAB(2ND-F-A18)': [105, 50, 140],
+  'A18-A1(1ST-F-A18)': [105, 50, 140],
+  'SCEE_CONF-ROOM(1ST-F-A18)': [105, 50, 140],
+  'DATA_SCIENCE_LAB(1ST-F-A18)': [105, 50, 140],
+  'CHEMISTRY_LAB(1ST-F-A18)': [105, 50, 140],
+  'SCEE_ELECTRONIC_LAB(GROUND_F-A18)': [105, 50, 140],
   'A-17-1-A(GROUND-F-A17)': [105, 40, 110],
   'A-17-1-B(GROUND-F-A17)': [105, 40, 110],
   'A-17-1-D(GROUND-F-A17)': [105, 40, 110],
@@ -114,7 +113,6 @@ function CoordinateMarker({ position, color, isSelected }) {
   );
 }
 
-
 function Model() {
   const { scene } = useGLTF('/static/map2NOTREE.glb'); // Ensure the path to the model is correct
   return <primitive object={scene} />;
@@ -125,7 +123,7 @@ function CameraControls({ targetPosition }) {
   const controls = React.useRef();
 
   React.useEffect(() => {
-    camera.position.set(50, 150, 300);  // Adjust this to zoom out further on load
+    camera.position.set(0, 150, -200);  // Adjust this to zoom out further on load
     controls.current.update();
   }, [camera]);
 
@@ -229,6 +227,8 @@ function ModelView() {
       setSelectedBuilding(suggestion); // Set the selected building
     }
   };
+const [highlightedFromIndex, setHighlightedFromIndex] = useState(-1);
+const [highlightedToIndex, setHighlightedToIndex] = useState(-1);
 
   return (
     <div>
@@ -242,18 +242,27 @@ function ModelView() {
         placeholder="From (e.g., B8)"
         style={searchBarStyle}
         onKeyDown={(e) => {
-        if (e.key === 'Enter' && fromSuggestions.length > 0) {
-        handleFromSuggestionClick(fromSuggestions[0]); // Automatically select the first suggestion on Enter
-        }
-      }}
-/>
+          if (e.key === 'Enter' && fromSuggestions.length > 0) {
+            handleFromSuggestionClick(fromSuggestions[highlightedFromIndex >= 0 ? highlightedFromIndex : 0]); // Select highlighted or first suggestion on Enter
+          } else if (e.key === 'ArrowDown') {
+            setHighlightedFromIndex((prevIndex) => Math.min(prevIndex + 1, fromSuggestions.length - 1)); // Navigate down
+          } else if (e.key === 'ArrowUp') {
+            setHighlightedFromIndex((prevIndex) => Math.max(prevIndex - 1, 0)); // Navigate up
+          }
+        }}
+        
+/>  
           {fromSuggestions.length > 0 && (
             <ul style={suggestionsStyle}>
-              {fromSuggestions.map((suggestion) => (
+              {fromSuggestions.map((suggestion,index) => (
                 <li
                   key={suggestion}
                   onClick={() => handleFromSuggestionClick(suggestion)}
-                  style={suggestionItemStyle}
+                  style={{
+                    ...suggestionItemStyle,
+                    backgroundColor: highlightedFromIndex === index ? '#ddd' : 'white', // Highlight if selected
+                    color: highlightedFromIndex === index ? '#333' : '#555',
+                  }}
                 >
                   {suggestion}
                 </li>
@@ -270,18 +279,26 @@ function ModelView() {
         placeholder="To (e.g., B12)"
         style={searchBarStyle}
         onKeyDown={(e) => {
-        if (e.key === 'Enter' && toSuggestions.length > 0) {
-        handleToSuggestionClick(toSuggestions[0]); // Automatically select the first suggestion on Enter
-    }
-  }}
+          if (e.key === 'Enter' && toSuggestions.length > 0) {
+            handleToSuggestionClick(toSuggestions[highlightedToIndex >= 0 ? highlightedToIndex : 0]); // Select highlighted or first suggestion on Enter
+          } else if (e.key === 'ArrowDown') {
+            setHighlightedToIndex((prevIndex) => Math.min(prevIndex + 1, toSuggestions.length - 1)); // Navigate down
+          } else if (e.key === 'ArrowUp') {
+            setHighlightedToIndex((prevIndex) => Math.max(prevIndex - 1, 0)); // Navigate up
+          }
+        }}
 />
           {toSuggestions.length > 0 && (
             <ul style={suggestionsStyle}>
-              {toSuggestions.map((suggestion) => (
+              {toSuggestions.map((suggestion,index) => (
                 <li
                   key={suggestion}
                   onClick={() => handleToSuggestionClick(suggestion)}
-                  style={suggestionItemStyle}
+                  style={{
+                    ...suggestionItemStyle,
+                    backgroundColor: highlightedToIndex === index ? '#ddd' : 'white', // Highlight if selected
+                    color: highlightedToIndex === index ? '#333' : '#555',
+                  }}
                 >
                   {suggestion}
                 </li>
@@ -357,3 +374,4 @@ const suggestionItemStyle = {
 };
 
 export default ModelView;
+
