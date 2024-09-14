@@ -1,32 +1,24 @@
 import './App.css';
-import ModelView from './pages/modelView';
-import Grid from '@mui/material/Grid2';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import ResponsiveAppBar from './components/ResponsiveAppBar';
-import AnchorTemporaryDrawer from './components/AnchorTemporaryDrawer';
- 
+import ActionAreaCardCarousel from './components/ActionAreaCardCarousel';
+import ModelView from './pages/modelView';
+import Footer from './components/Footer';
+import ParticlesContainer from './components/Particlecontainer';
 
 function App() {
   return (
-    <div className="App">
-      <ResponsiveAppBar/>
-      <AnchorTemporaryDrawer/>
-       <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={2}>
-        <Grid size={8}>
-        <ModelView/>
-        </Grid>
-        <Grid size={4}>
-        </Grid>
-         
-      </Grid>
-    </Box>
-     
+    <div className="App  ">
+      {/* <ParticlesContainer /> */}
+      
+      {/* Content layers on top */}
+      <div className="content-container">
+        <ResponsiveAppBar />
+        <ActionAreaCardCarousel />
+        <ModelView />
+        <Footer />
+      </div>
     </div>
   );
 }
 
 export default App;
-
