@@ -6,12 +6,9 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
+
 // Coordinates mapping for buildings
 const buildingCoordinates = {
-  // Your existing building coordinates here
-  // ...
-  'B8': [-10, 20, 45],
-  'B12': [30, 20, 100],
   'B8': [-10, 20, 45],
   'B12': [30, 20, 100],
   'B9': [30, 20, 40],
@@ -36,7 +33,45 @@ const buildingCoordinates = {
   'A17': [105, 40, 110],
   'A18': [105, 50, 140],
   'A13': [-15, 35, 166],
-  'A14': [-30, 35, 206],
+  'AVL(GROUND-F_A13)': [-15, 35, 166],
+  'MNC-LAB(GROUND-F_A13)': [-15, 35, 166],
+  'A13-1A(GROUND-F_A13)': [-15, 35, 166],
+  'A13-2A(1ST-F_A13)': [-15, 35, 166],
+  'A13-2B(1ST-F_A13)': [-15, 35, 166],
+  'A13-2C(1ST-F_A13)': [-15, 35, 166],
+  'A13-2D(1ST-F_A13)': [-15, 35, 166],
+  'A13-3A(2ND-F_A13)': [-15, 35, 166],
+  'A13-L1(2ND-F_A13)': [-15, 35, 166],
+  'A13-L2(2ND-F_A13)': [-30, 35, 206],
+  'NKN_CONFERENCE_ROOM(3RD-F_A13)': [-30, 35, 206],
+  'A13-F1(3RD-F_A13)': [-30, 35, 206],
+  'A13-F2(3RD-F_A13)': [-30, 35, 206],
+  'A13-F7(3RD-F_A13)': [-30, 35, 206],
+  'A13-F4(3RD-F_A13)': [-30, 35, 206],
+  'A13-F3(3RD-F_A13)': [-30, 35, 206],
+  'A13-F5(3RD-F_A13)': [-30, 35, 206],
+  'A13-F6(3RD-F_A13)': [-30, 35, 206],
+  'A13-F9(3RD-F_A13)': [-30, 35, 206],
+  'A13-F11(3RD-F_A13)': [-30, 35, 206],
+  'A13-F12(3RD-F_A13)': [-30, 35, 206],
+  'A13-F13(3RD-F_A13)': [-30, 35, 206],
+  'A13-F14(3RD-F_A13)': [-30, 35, 206],
+  'A13-F15(3RD-F_A13)': [-30, 35, 206],
+  'SMSS_CHAIRPERSON_ROOM(3RD-F_A13)': [-30, 35, 206],
+  'SMSS__OFFICE(3RD-F_A13)': [-30, 35, 206],
+  'A14': [-15, 35, 186],
+  'BIOGEOCHEMISTRY_LAB(1ST-F_A14)': [-15, 35, 186],
+  'DP_LAB(1ST-F_A14)': [-15, 35, 186],
+  'TINKERING_LAB(1ST-F_A14)': [-15, 35, 186],
+  'INNORVATION_OFFICE(1ST-F_A14)': [-15, 35, 186],
+  'STEAM_INNORVATION_LAB(1ST-F_A14)': [-15, 35, 186],
+  'CAM_LAB(GROUND-F_A14)': [-15, 35, 186],
+  'SHSS_OFFICE(2ND-F_A14)': [-15, 35, 186],
+  'LANGUAGE_LAB(2ND-F_A14)': [-15, 35, 186],
+  'CONFERENCE_ROOM(2ND-F_A14)': [-15, 35, 186],
+  'HCI_CENTER(3RD-F_A14)': [-15, 35, 186],
+  'MATERIAL_SCIENCE_LAB(3RD-F_A14)': [-15, 35, 186],
+  'QUANTUM_TECH_CENTRE(3RD-F_A14)': [-15, 35, 186],
   'A11': [-130, 40, 240],
   'A10': [-150, 40, 215],
   'A9': [-220, 40, 265],
@@ -105,8 +140,54 @@ const buildingCoordinates = {
   'PMC_CLUB(2ND_F_A19)': [165, 30, 95],
   'MUSIC_CLUB(2ND_F_A19)': [165, 30, 95],
   'SPICMACAY_CLUB(2ND_F_A19)': [165, 30, 95],
-  // Add other coordinates...
-};
+  'DRAMA_CLUB(3-F_PEEPAL_MESS)': [195, 35, -20],
+  'DANCE_CLUB(3-F_PEEPAL_MESS)': [195, 35, -20],
+  'CULTURAL_SOCIETY_OFFICE(3-F_PEEPAL_MESS)': [195, 35, -20],
+  'A-10_1-A(GROUND-F_A10)': [-150, 40, 215],
+  'A-10_1-B(GROUND-F_A10)': [-150, 40, 215],
+  'A-10_1-C(GROUND-F_A10)': [-150, 40, 215],
+  'A-10_1-D(GROUND-F_A10)': [-150, 40, 215],
+  'A-10_202(COMPUTER_LAB)(GROUND-F_A10)': [-150, 40, 215],
+  'COMMUNICATION-LAB(1ST-F_A10)': [-150, 40, 215],
+  'CONTROL_SYSTEM-LAB(1ST-F_A10)': [-150, 40, 215],
+  'A-10_2-A(1ST-F_A10)': [-150, 40, 215],
+  'A-10_2-B(1ST-F_A10)': [-150, 40, 215],
+  'A-10_2-C(1ST-F_A10)': [-150, 40, 215],
+  'GSC-ROOM(1ST-F_A10)': [-150, 40, 215],
+  'A-10_3-A(2ND-F_A10)': [-150, 40, 215],
+  'A-10_3-B(2ND-F_A10)': [-150, 40, 215],
+  'A-10_3-C(2ND-F_A10)': [-150, 40, 215],
+  'SOM_OFFICE(2ND-F_A10)': [-150, 40, 215],
+  'NKN_CONFERENCE_ROOM(2ND-F_A10)': [-150, 40, 215],
+  'FACULTY_OFFICE(2ND-F_A10)': [-150, 40, 215],
+  '(2ND-F_A10)': [-150, 40, 215],
+  'FACULTY_OFFICE(2ND-F_A10)': [-150, 40, 215],
+  'GEOTECHNICAL_ENG_LAB(2ND-F_A11)': [-130, 40, 240],
+  'CNC_LAB(2ND-F_A11)': [-130, 40, 240],
+  'DESIGN_LAB-1(2ND-F_A11)': [-130, 40, 240],
+  'THERMOFLUID_LAB(2ND-F_A11)': [-130, 40, 240],
+  'A-11_1-A(1ST-F_A11)': [-130, 40, 240],
+  'A-11_1-B(1ST-F_A11)': [-130, 40, 240],
+  'CAIR_LAB(1ST-F_A11)': [-130, 40, 240],
+  'DESIGN_LAB-2(3RD-F_A11)': [-130, 40, 240],
+  'WATER_RESIRE_ENG_LAB-2(3RD-F_A11)': [-130, 40, 240],
+  'EXPERIMENTAL_THERMOFLUIDS_LAB(3RD-F_A11)': [-130, 40, 240],
+  'A-11_COMPUTER_LAB(3RD-F_A11)': [-130, 40, 240],
+  'RHEOLOGY_LAB(3RD-F_A11)': [-130, 40, 240],
+  'HYDROLOGY_LAB(3RD-F_A11)': [-130, 40, 240],
+  'HYDROCLIMATOLOGY_LAB(3RD-F_A11)': [-130, 40, 240],
+  'COMPOSITE_DESIGN_LAB(4TH-F_A11)': [-130, 40, 240],
+  'COMPUTATIONAL_DESIGN_LAB(4TH-F_A11)': [-130, 40, 240],
+  'SMEE_MEETING_ROOM(4TH-F_A11)': [-130, 40, 240],
+  'SCENE_OFFICE(5TH-F_A11)': [-130, 40, 240],
+  'STUDENTS_AFFAIR(GROUND-F_A9)': [-220, 40, 265],
+  'ACADEMICS_SECTION(1ST-F_A9)': [-220, 40, 265],
+  'FACULTY_AFFAIRS(1ST-F_A9)': [-220, 40, 265],
+  'REGISTRAR_OFFICE(2ND-F_A9)': [-220, 40, 265],
+  'SATELLITE_LIBRARY(3RD-F_A9)': [-220, 40, 265],
+  'FOUNTAIN_AREA': [-330, 15, 200],
+  
+}
 
 // Coordinate Marker Component
 function CoordinateMarker({ position, color, isSelected }) {
@@ -120,7 +201,7 @@ function CoordinateMarker({ position, color, isSelected }) {
 
 // Model Component
 function Model() {
-  const { scene } = useGLTF('map2NOTREE.glb');
+  const { scene } = useGLTF('s.glb');
   return <primitive object={scene} />;
 }
 
