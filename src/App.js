@@ -1,21 +1,22 @@
 import './App.css';
+import Home from './pages/Home';
 import ResponsiveAppBar from './components/ResponsiveAppBar';
-import ActionAreaCardCarousel from './components/ActionAreaCardCarousel';
-import ModelView from './pages/modelView';
-import Footer from './components/Footer';
-import ParticlesContainer from './components/Particlecontainer';
+import Aboutpage from './pages/Aboutpage'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';    
+import { element } from 'three/webgpu';
 
 function App() {
   return (
     <div className="App  ">
-      {/* <ParticlesContainer /> */}
-      
       {/* Content layers on top */}
       <div className="content-container">
-        <ResponsiveAppBar />
-        <ActionAreaCardCarousel />
-        <ModelView />
-        <Footer />
+        <Router>
+        <ResponsiveAppBar/>
+            <Routes>
+            <Route path='/' element={ <Home/> } ></Route>
+            <Route path='/about' element={<Aboutpage/>} ></Route>
+          </Routes>
+        </Router>
       </div>
     </div>
   );

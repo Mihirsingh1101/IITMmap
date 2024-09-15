@@ -6,6 +6,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
+
 // Coordinates mapping for buildings
 const buildingCoordinates = {
   'B8': [-10, 20, 45],
@@ -184,9 +185,10 @@ const buildingCoordinates = {
   'FACULTY_AFFAIRS(1ST-F_A9)': [-220, 40, 265],
   'REGISTRAR_OFFICE(2ND-F_A9)': [-220, 40, 265],
   'SATELLITE_LIBRARY(3RD-F_A9)': [-220, 40, 265],
-  'FOUNTAIN_AREA': [-330, 15, 200],
-  
+  'FOUNTAIN_AREA': [-330, 15, 200],
+  
 }
+
 // Coordinate Marker Component
 function CoordinateMarker({ position, color, isSelected }) {
   return (
@@ -199,7 +201,7 @@ function CoordinateMarker({ position, color, isSelected }) {
 
 // Model Component
 function Model() {
-  const { scene } = useGLTF('map2NOTREE.glb');
+  const { scene } = useGLTF('s.glb');
   return <primitive object={scene} />;
 }
 

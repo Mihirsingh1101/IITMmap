@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,17 +15,25 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
- // Adjust the path accordingly
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact'];
+const navItems = [
+  { label: 'Home', url: '/' },
+  { label: 'About', url: '/about' },
+  { label: 'Contact', url: '/contact' }
+];
 
 function DrawerAppBar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
+  };
+
+  const handleNavigation = (url) => {
+    navigate(url); // Use navigate to change routes
   };
 
   const drawer = (
@@ -35,9 +44,9 @@ function DrawerAppBar(props) {
       <Divider sx={{ borderColor: '#fff' }} />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item} sx={{ color: '#fff' }} />
+          <ListItem key={item.label} disablePadding>
+            <ListItemButton sx={{ textAlign: 'center' }} onClick={() => handleNavigation(item.url)}>
+              <ListItemText primary={item.label} sx={{ color: '#fff' }} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -77,8 +86,8 @@ function DrawerAppBar(props) {
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#fff', fontSize: '16px' }}>
-                {item}
+              <Button key={item.label} sx={{ color: '#fff', fontSize: '16px' }} onClick={() => handleNavigation(item.url)}>
+                {item.label}
               </Button>
             ))}
           </Box>
