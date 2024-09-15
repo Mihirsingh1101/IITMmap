@@ -201,7 +201,7 @@ function CoordinateMarker({ position, color, isSelected }) {
 
 // Model Component
 function Model() {
-  const { scene } = useGLTF('s.glb');
+  const { scene } = useGLTF('map2NOTREE.glb');
   return <primitive object={scene} />;
 }
 
