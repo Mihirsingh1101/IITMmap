@@ -36,7 +36,7 @@ const teamMembers = [
   {
     name: 'Aditya Singh',
     role: 'learning UI/UX Designing',
-    image: '/static/images/team/bob.jpg',
+    image: 'adittyas.jpg',
     description: '',
     linkedIn: 'https://www.linkedin.com/in/aditya-singh-324654328?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_appn',
   },
@@ -49,8 +49,8 @@ const teamMembers = [
   },
   {
     name: 'Arham jain',
-    role: '',
-    image: '/static/images/team/chris.jpg',
+    role: 'Data collection',
+    image: 'arham.jpg',
     description: 'Focused on creating user-friendly designs.',
     linkedIn: 'https://www.linkedin.com/in/arham-jain-69b645312?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
