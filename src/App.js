@@ -11,23 +11,23 @@ import AnchorTemporaryDrawer from './components/AnchorTemporaryDrawer';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ResponsiveAppBar/>
+      <AnchorTemporaryDrawer/>
+       <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={2}>
+        <Grid size={8}>
+          firsts
+        <ModelView/>
+        </Grid>
+        <Grid size={4}>
+          other filds
+        </Grid>
+         
+      </Grid>
+    </Box>
+     
     </div>
   );
 }
 
-export default App;
-
+export default App;
