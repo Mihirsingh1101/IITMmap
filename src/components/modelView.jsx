@@ -6,6 +6,12 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
+// Origin real-world coordinates (latitude, longitude)
+const originLat = 30.667165    ; // Example latitude for origin
+const originLon = 76.887626; // Example longitude for origin
+
+// Scaling factor to convert real-world distance into 3D model distance
+const scalingFactor = 40000; // This factor scales the latitude/longitude to virtual coordina3es
 
 // Coordinates mapping for buildings
 const buildingCoordinates = {
@@ -185,16 +191,32 @@ const buildingCoordinates = {
   'FACULTY_AFFAIRS(1ST-F_A9)': [-220, 40, 265],
   'REGISTRAR_OFFICE(2ND-F_A9)': [-220, 40, 265],
   'SATELLITE_LIBRARY(3RD-F_A9)': [-220, 40, 265],
-  'FOUNTAIN_AREA': [-330, 15, 200],
-  
+  'FOUNTAIN_AREA': [-330, 15, 200],
+  
 }
+
+
+// Function to convert real-world coordinates (latitude, longitude) to virtual coordinates
+const convertToVirtualCoordinates = (lat, lon) => {
+  const deltaLat = lat - originLat; // Latitude difference
+  const deltaLon = lon - originLon; // Longitude difference
+
+// Convert to 3D space
+const virtualX = deltaLon * scalingFactor; // Scale the longitude difference
+const virtualZ = deltaLat * scalingFactor; // Scale the latitude difference
+
+return [virtualX, 0, virtualZ]; // Assuming the y-axis is 0 for now (height can be added later)
+};
+
+
+
 
 // Coordinate Marker Component
 function CoordinateMarker({ position, color, isSelected }) {
   return (
     <mesh position={position}>
-      <tetrahedronGeometry args={[isSelected ? 8 : 5, 4]} />
-      <meshBasicMaterial color={isSelected ? 'red' : color} />
+      <tetrahedronGeometry args={[isSelected ? 18 : 5, 4]} />
+      <meshBasicMaterial color={isSelected ? 'yellow' : color} />
     </mesh>
   );
 }
@@ -262,6 +284,7 @@ function ModelView() {
   const [highlightedFromIndex, setHighlightedFromIndex] = useState(-1);
   const [highlightedToIndex, setHighlightedToIndex] = useState(-1);
   const sliderRef = useRef(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   const handleFromChange = useCallback((event) => {
     const value = event.target.value;
@@ -328,6 +351,78 @@ function ModelView() {
 
     return () => clearInterval(interval);
   }, []);
+
+// Handle current location (this would be replaced with actual GPS data in production)
+const handleLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      const virtualPosition = convertToVirtualCoordinates(latitude, longitude);
+      setCurrentLocation(virtualPosition); // Update the current location marker
+    });
+  }
+};
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371e3; // Radius of the Earth in meters
+  const toRadians = (deg) => (deg * Math.PI) / 180;
+
+  const dLat = toRadians(lat2 - lat1);
+  const dLon = toRadians(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c; // Distance in meters
+}
+
+let lastPosition = null;
+
+useEffect(() => {
+  const watchId = navigator.geolocation.watchPosition(
+    (position) => {
+      const { latitude, longitude, accuracy } = position.coords;
+
+      console.log(`Lat: ${latitude}, Lon: ${longitude}, Accuracy: ${accuracy} meters`);
+
+      if (lastPosition) {
+        const distance = calculateDistance(
+          lastPosition.latitude,
+          lastPosition.longitude,
+          latitude,
+          longitude
+        );
+
+        if (distance >= 1) { // Update if moved more than 1 meter
+          lastPosition = { latitude, longitude };
+          const virtualPosition = convertToVirtualCoordinates(latitude, longitude);
+          setCurrentLocation(virtualPosition);
+          console.log(`Updated position: Lat ${latitude}, Lon ${longitude}`);
+        } else {
+          console.log(`Movement too small: ${distance} meters`);
+        }
+      } else {
+        lastPosition = { latitude, longitude };
+      }
+    },
+    (error) => {
+      console.error("Error fetching location:", error.message);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    }
+  );
+
+  return () => navigator.geolocation.clearWatch(watchId);
+}, []);
+
+
 
   return (
     <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f0f0f0', margin: '0', padding: '0' }}>
@@ -444,6 +539,14 @@ function ModelView() {
               isSelected={selectedBuilding === toBuilding}
             />
           )}
+          {currentLocation && (
+            <CoordinateMarker
+            position={currentLocation}
+            color="red"
+            isSelected={false}
+            size={3}
+            />
+          )}
           <CameraControls targetPosition={targetPosition} />
         </Canvas>
       </div>
@@ -465,7 +568,10 @@ const suggestionsStyle = {
   padding: 0,
   margin: 0,
   border: '1px solid #ddd',
-  borderRadius: '4px'
+  borderRadius: '4px',
+  maxHeight: '150px',      
+  overflowY: 'auto',        
+  backgroundColor: 'white'  
 };
 
 const suggestionItemStyle = {
