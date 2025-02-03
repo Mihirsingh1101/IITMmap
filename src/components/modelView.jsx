@@ -1,13 +1,11 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
-import * as THREE from 'three';  // Import THREE for vector operations
+import { OrbitControls, useGLTF, Environment } from '@react-three/drei';
+import * as THREE from 'three';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-
-// Coordinates mapping for buildings
 const buildingCoordinates = {
   'B8': [-10, 20, 45],
   'B12': [30, 20, 100],
@@ -185,27 +183,23 @@ const buildingCoordinates = {
   'FACULTY_AFFAIRS(1ST-F_A9)': [-220, 40, 265],
   'REGISTRAR_OFFICE(2ND-F_A9)': [-220, 40, 265],
   'SATELLITE_LIBRARY(3RD-F_A9)': [-220, 40, 265],
-  'FOUNTAIN_AREA': [-330, 15, 200],
-  
-}
+  'FOUNTAIN_AREA': [-330, 15, 200],
+};
 
-// Coordinate Marker Component
 function CoordinateMarker({ position, color, isSelected }) {
   return (
     <mesh position={position}>
-      <tetrahedronGeometry args={[isSelected ? 8 : 5, 4]} />
-      <meshBasicMaterial color={isSelected ? 'red' : color} />
+      <sphereGeometry args={[isSelected ? 6 : 4]} />
+      <meshStandardMaterial color={isSelected ? 'red' : color} />
     </mesh>
   );
 }
 
-// Model Component
 function Model() {
   const { scene } = useGLTF('s.glb');
   return <primitive object={scene} />;
 }
 
-// Camera Controls Component
 function CameraControls({ targetPosition }) {
   const { camera } = useThree();
   const controls = useRef();
@@ -249,7 +243,6 @@ function CameraControls({ targetPosition }) {
   return <OrbitControls ref={controls} />;
 }
 
-// Main Component
 function ModelView() {
   const [fromBuilding, setFromBuilding] = useState('');
   const [toBuilding, setToBuilding] = useState('');
@@ -259,118 +252,67 @@ function ModelView() {
   const [toPosition, setToPosition] = useState(null);
   const [targetPosition, setTargetPosition] = useState(null);
   const [selectedBuilding, setSelectedBuilding] = useState(null);
-  const [highlightedFromIndex, setHighlightedFromIndex] = useState(-1);
-  const [highlightedToIndex, setHighlightedToIndex] = useState(-1);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const sliderRef = useRef(null);
 
-  const handleFromChange = useCallback((event) => {
-    const value = event.target.value;
-    setFromBuilding(value);
-
-    if (value) {
-      const debounceTimeout = setTimeout(() => {
-        const filteredSuggestions = Object.keys(buildingCoordinates).filter((key) =>
-          key.toLowerCase().includes(value.toLowerCase())
-        );
-        setFromSuggestions(filteredSuggestions);
-      }, 300);
-      return () => clearTimeout(debounceTimeout);
-    } else {
-      setFromSuggestions([]);
-    }
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleToChange = useCallback((event) => {
-    const value = event.target.value;
-    setToBuilding(value);
-
-    if (value) {
-      const debounceTimeout = setTimeout(() => {
-        const filteredSuggestions = Object.keys(buildingCoordinates).filter((key) =>
-          key.toLowerCase().includes(value.toLowerCase())
-        );
-        setToSuggestions(filteredSuggestions);
-      }, 300);
-      return () => clearTimeout(debounceTimeout);
-    } else {
+  const handleSearch = (building, setBuilding, setPosition) => {
+    const position = buildingCoordinates[building.toUpperCase()];
+    if (position) {
+      setPosition(position);
+      setTargetPosition(position); // Ensures zooming works
+      setSelectedBuilding(building);
+      setFromSuggestions([]);
       setToSuggestions([]);
     }
+  };
+
+  const handleInputChange = useCallback((event, setBuilding, setSuggestions) => {
+    const value = event.target.value;
+    setBuilding(value);
+    if (value) {
+      const filteredSuggestions = Object.keys(buildingCoordinates).filter((key) =>
+        key.toLowerCase().includes(value.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
+    } else {
+      setSuggestions([]);
+    }
   }, []);
-
-  const handleFromSuggestionClick = (suggestion) => {
-    setFromBuilding(suggestion);
-    setFromSuggestions([]);
-    const position = buildingCoordinates[suggestion.toUpperCase()];
-    if (position) {
-      setFromPosition(position);
-      setTargetPosition(position);
-      setSelectedBuilding(suggestion);
-    }
-  };
-
-  const handleToSuggestionClick = (suggestion) => {
-    setToBuilding(suggestion);
-    setToSuggestions([]);
-    const position = buildingCoordinates[suggestion.toUpperCase()];
-    if (position) {
-      setToPosition(position);
-      setTargetPosition(position);
-      setSelectedBuilding(suggestion);
-    }
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (sliderRef.current) {
         sliderRef.current.slickNext();
       }
-    }, 3000); // Change slide every 3 seconds
-
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f0f0f0', margin: '0', padding: '0' }}>
-      {/* Sidebar with search bars */}
-      <div style={{
-        width: '340px',
-        height: '100vh',
-        backgroundColor: '#002b36',
-        padding: '20px',
-        borderRight: '2px solid #ddd',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }}>
-        <div style={{ marginBottom: '100px' }}>
+    <div style={isMobile ? styles.mobileContainer : styles.container}>
+      {/* Sidebar */}
+      <div style={styles.sidebar}>
+        <div>
           <input
             type="text"
             value={fromBuilding}
-            onChange={handleFromChange}
+            onChange={(e) => handleInputChange(e, setFromBuilding, setFromSuggestions)}
             placeholder="From (e.g., B8)"
-            style={searchBarStyle}
+            style={styles.searchBar}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && fromSuggestions.length > 0) {
-                handleFromSuggestionClick(fromSuggestions[highlightedFromIndex >= 0 ? highlightedFromIndex : 0]);
-              } else if (e.key === 'ArrowDown') {
-                setHighlightedFromIndex((prevIndex) => Math.min(prevIndex + 1, fromSuggestions.length - 1));
-              } else if (e.key === 'ArrowUp') {
-                setHighlightedFromIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-              }
+              if (e.key === 'Enter') handleSearch(fromBuilding, setFromBuilding, setFromPosition);
             }}
           />
           {fromSuggestions.length > 0 && (
-            <ul style={suggestionsStyle}>
-              {fromSuggestions.map((suggestion, index) => (
-                <li
-                  key={suggestion}
-                  onClick={() => handleFromSuggestionClick(suggestion)}
-                  style={{
-                    ...suggestionItemStyle,
-                    backgroundColor: highlightedFromIndex === index ? '#ddd' : 'white',
-                    color: highlightedFromIndex === index ? '#333' : '#555',
-                  }}
-                >
+            <ul style={styles.suggestions}>
+              {fromSuggestions.map((suggestion) => (
+                <li key={suggestion} onClick={() => handleSearch(suggestion, setFromBuilding, setFromPosition)} style={styles.suggestionItem}>
                   {suggestion}
                 </li>
               ))}
@@ -379,43 +321,29 @@ function ModelView() {
         </div>
 
         {/* Photo Slider */}
-        <div style={{ marginBottom: '20px', height: '300px', overflow: 'hidden', position: 'center' }}>
+        <div style={styles.sliderContainer}>
           <Slider {...sliderSettings} ref={sliderRef}>
-            <div><img src="p1.jpg" alt="Slide 1" style={{ width: '100%', height: 'auto' }} /></div>
-            <div><img src="p2.jpg" alt="Slide 2" style={{ width: '100%', height: 'auto' }} /></div>
-            <div><img src="p1.jpg" alt="Slide 3" style={{ width: '100%', height: 'auto' }} /></div>
+            <div><img src="p1.jpg" alt="Slide 1" style={styles.sliderImage} /></div>
+            <div><img src="p2.jpg" alt="Slide 2" style={styles.sliderImage} /></div>
+            <div><img src="p1.jpg" alt="Slide 3" style={styles.sliderImage} /></div>
           </Slider>
         </div>
 
-        <div style={{ marginBottom: '200px', backgroundColor: '#002b36' }}>
+        <div>
           <input
             type="text"
             value={toBuilding}
-            onChange={handleToChange}
+            onChange={(e) => handleInputChange(e, setToBuilding, setToSuggestions)}
             placeholder="To (e.g., B12)"
-            style={searchBarStyle}
+            style={styles.searchBar}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && toSuggestions.length > 0) {
-                handleToSuggestionClick(toSuggestions[highlightedToIndex >= 0 ? highlightedToIndex : 0]);
-              } else if (e.key === 'ArrowDown') {
-                setHighlightedToIndex((prevIndex) => Math.min(prevIndex + 1, toSuggestions.length - 1));
-              } else if (e.key === 'ArrowUp') {
-                setHighlightedToIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-              }
+              if (e.key === 'Enter') handleSearch(toBuilding, setToBuilding, setToPosition);
             }}
           />
           {toSuggestions.length > 0 && (
-            <ul style={suggestionsStyle}>
-              {toSuggestions.map((suggestion, index) => (
-                <li
-                  key={suggestion}
-                  onClick={() => handleToSuggestionClick(suggestion)}
-                  style={{
-                    ...suggestionItemStyle,
-                    backgroundColor: highlightedToIndex === index ? '#ddd' : 'white',
-                    color: highlightedToIndex === index ? '#333' : '#555',
-                  }}
-                >
+            <ul style={styles.suggestions}>
+              {toSuggestions.map((suggestion) => (
+                <li key={suggestion} onClick={() => handleSearch(suggestion, setToBuilding, setToPosition)} style={styles.suggestionItem}>
                   {suggestion}
                 </li>
               ))}
@@ -424,26 +352,19 @@ function ModelView() {
         </div>
       </div>
 
-      {/* Main Canvas Container */}
-      <div style={{ flexGrow: 1, height: '100vh', backgroundColor: '#002b36', padding: '0', margin: '0' }}>
+      {/* 3D Model */}
+      <div style={isMobile ? styles.mobileCanvas : styles.canvas}>
         <Canvas style={{ height: '100%' }}>
           <ambientLight intensity={1.5} />
           <pointLight position={[10, 10, 10]} />
+          
+          {/* HDRI Background */}
+          <Environment preset="forest" background />
+          
           <Model />
-          {fromPosition && (
-            <CoordinateMarker
-              position={fromPosition}
-              color="blue"
-              isSelected={selectedBuilding === fromBuilding}
-            />
-          )}
-          {toPosition && (
-            <CoordinateMarker
-              position={toPosition}
-              color="green"
-              isSelected={selectedBuilding === toBuilding}
-            />
-          )}
+          {fromPosition && <CoordinateMarker position={fromPosition} color="blue" isSelected={selectedBuilding === fromBuilding} />}
+          {toPosition && <CoordinateMarker position={toPosition} color="green" isSelected={selectedBuilding === toBuilding} />}
+          
           <CameraControls targetPosition={targetPosition} />
         </Canvas>
       </div>
@@ -451,36 +372,19 @@ function ModelView() {
   );
 }
 
-// Styles
-const searchBarStyle = {
-  width: '100%',
-  padding: '10px',
-  border: '1px solid #ddd',
-  borderRadius: '4px',
-  marginBottom: '5px'
+const styles = {
+  container: { display: 'flex', height: '100vh' },
+  mobileContainer: { display: 'flex', flexDirection: 'column', height: '100vh' },
+  sidebar: { width: '360px', backgroundColor: '#002b36', padding: '20px' },
+  canvas: { flexGrow: 1, height: '100vh' },
+  mobileCanvas: { width: '100%', height: '50vh' },
+  searchBar: { width: '100%', padding: '10px', marginBottom: '5px' },
+  sliderContainer: { marginBottom: '20px' },
+  sliderImage: { width: '100%', height: 'auto' },
+  suggestions: { maxHeight: '120px', overflowY: 'auto', background: '#fff', border: '1px solid #ccc', borderRadius: '4px' },
+  suggestionItem: {padding: '10px', cursor: 'pointer', borderBottom: '1px solid #ccc', background: '#f8f8f8' }
 };
 
-const suggestionsStyle = {
-  listStyleType: 'none',
-  padding: 0,
-  margin: 0,
-  border: '1px solid #ddd',
-  borderRadius: '4px'
-};
-
-const suggestionItemStyle = {
-  padding: '10px',
-  cursor: 'pointer'
-};
-
-const sliderSettings = {
-  dots: false,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  vertical: true, // Change slider to vertical
-  verticalSwiping: true // Enable vertical swiping
-};
+const sliderSettings = { dots: false, infinite: true, slidesToShow: 1, slidesToScroll: 1 };
 
 export default ModelView;
