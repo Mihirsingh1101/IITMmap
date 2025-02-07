@@ -297,7 +297,7 @@ function ModelView() {
   return (
     <div style={isMobile ? styles.mobileContainer : styles.container}>
       {/* Sidebar */}
-      <div style={styles.sidebar}>
+      <div style={isMobile ? styles.mobilesidebar:styles.sidebar}>
         <div>
           <input
             type="text"
@@ -375,9 +375,10 @@ function ModelView() {
 const styles = {
   container: { display: 'flex', height: '100vh' },
   mobileContainer: { display: 'flex', flexDirection: 'column', height: '100vh' },
-  sidebar: { width: '360px', backgroundColor: '#002b36', padding: '20px' },
+  sidebar: { width: '30%', backgroundColor: '#002b36', padding: '20px' },
+  mobilesidebar: {width : '360', backgroundColor: '#002b36', padding: '20px' },
   canvas: { flexGrow: 1, height: '100vh' },
-  mobileCanvas: { width: '100%', height: '50vh' },
+  mobileCanvas: { flexGrow: 1,width: '100%', height: '50vh' },
   searchBar: { width: '100%', padding: '10px', marginBottom: '5px' },
   sliderContainer: { marginBottom: '20px' },
   sliderImage: { width: '100%', height: 'auto' },

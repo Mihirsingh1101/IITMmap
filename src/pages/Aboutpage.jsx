@@ -57,9 +57,16 @@ const teamMembers = [
   {
     name: 'Chetan Anand',
     role: '3d Desgining ',
-    image: '/static/images/team/jane.jpg',
+    image: 'chetan.jpg',
     description: 'Desgine our 3D map',
-    linkedIn: 'https://linkedin.com/in/janesmith',
+    linkedIn: 'https://www.linkedin.com/in/chetan-anand-940989324?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+  },
+  {
+    name: 'Tanish Garg',
+    role: 'Tester & Debugger ',
+    image: 'Ali.jpg',
+    description: 'Check For bugs and Error and provide solution for it',
+    linkedIn: 'https://www.linkedin.com/in/tanishqgarg1331?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
 ];
 
