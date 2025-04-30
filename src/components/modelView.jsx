@@ -1104,7 +1104,7 @@ function ModelView() {
        }, 200);
       return () => clearTimeout(debounceTimeout);
     } else {
-      setSuggestions([]);
+      setToSuggestions([]);
     }
   }, []);
   const handleFromSuggestionClick = useCallback((suggestion) => {
