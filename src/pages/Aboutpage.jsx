@@ -10,62 +10,66 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn'; // Import LinkedIn Icon
 import Avatar from '@mui/material/Avatar'; // For profile images
 import { keyframes } from '@emotion/react'; // To define keyframes for animation
 
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 // Array of team members' data
 const teamMembers = [
   {
     name: 'Mihir Singh',
     role: 'Team Lead',
-    image: 'mihir.jpg',
-    description: 'Learning React,threejs, frontend and UI/UX design.',
+    image: 'mihir2.jpg',
+    description: '',
     linkedIn: 'https://www.linkedin.com/in/mihir-singh-63a83431a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
   {
-    name: 'Ekansh Shingal',
-    role: 'learning Backend ',
-    image: 'ekansh1.jpg',
-    description: 'Contribute in adding navigaiton',
+    name: 'Ekansh Singal',
+    role: 'Backend Developer ',
+    image: 'ekansh2.jpg',
+    description: '',
     linkedIn: 'https://www.linkedin.com/in/ekansh-singal-61a0a0317?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
   {
     name: 'Aditya Mittal',
-    role: 'learning Backend',
-    image: 'adityam.jpg',
-    description: 'Contribute in adding navigaiton',
+    role: 'Backend Developer',
+    image: 'aadi2.jpg',
+    description: '',
     linkedIn: 'https://www.linkedin.com/in/aditya-mittal-979494265?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
   {
     name: 'Aditya Singh',
-    role: 'learning UI/UX Designing',
-    image: 'adittyas.jpg',
+    role: 'Frontend Developer',
+    image: 'singh2.jpg',
     description: '',
     linkedIn: 'https://www.linkedin.com/in/aditya-singh-324654328?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_appn',
   },
   {
     name: 'Pranjal Prakhar',
-    role: 'learning UI/UX Designing',
+    role: 'Frontend Developer',
     image: 'pranjal.jpg',
     description: '',
     linkedIn: 'https://www.linkedin.com/in/pranjal-prakhar-747366323?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
   {
     name: 'Arham jain',
-    role: 'Data collection',
-    image: 'arham.jpg',
-    description: 'Focused on creating user-friendly designs.',
+    role: 'Data Analyst',
+    image: 'arham2.jpg',
+    description: '',
     linkedIn: 'https://www.linkedin.com/in/arham-jain-69b645312?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
   {
     name: 'Chetan Anand',
-    role: '3d Desgining ',
+    role: '3D Model Designer',
     image: 'chetan.jpg',
-    description: 'Desgine our 3D map',
+    description: '',
     linkedIn: 'https://www.linkedin.com/in/chetan-anand-940989324?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
   {
-    name: 'Tanish Garg',
+    name: 'Tanishq Garg',
     role: 'Tester & Debugger ',
-    image: 'Ali.jpg',
-    description: 'Check For bugs and Error and provide solution for it',
+    image: 'tanishq.jpg',
+    description: '',
     linkedIn: 'https://www.linkedin.com/in/tanishqgarg1331?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
 ];
@@ -108,7 +112,7 @@ export default function Aboutpage() {
   return (
     <div style={{ 
       padding: '40px', 
-      background: 'linear-gradient(to right, #0061ff, #60efff)', // Bluish gradient background
+      background: 'linear-gradient(to right,rgb(1, 2, 4), #60efff)', // Bluish gradient background
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',

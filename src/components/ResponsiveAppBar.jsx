@@ -20,7 +20,7 @@ const drawerWidth = 240;
 const navItems = [
   { label: 'Home', url: '/' },
   { label: 'About', url: '/about' },
-  { label: 'Contact', url: '/contact' }
+  // { label: 'Contact', url: '/contact' }
 ];
 
 function DrawerAppBar(props) {
