@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import LinkedInIcon from '@mui/icons-material/LinkedIn'; // Import LinkedIn Icon
 import Avatar from '@mui/material/Avatar'; // For profile images
-import { keyframes } from '@emotion/react'; // To define keyframes for animation
+//import { keyframes } from '@emotion/react'; // To define keyframes for animation
 
 
 import "slick-carousel/slick/slick.css";
@@ -16,6 +16,20 @@ import "slick-carousel/slick/slick-theme.css";
 
 // Array of team members' data
 const teamMembers = [
+    {
+    name: 'Vaibhav Khesharwani',
+    role: 'Mentor',
+    image: 'mihir2.jpg',
+    description: '',
+    linkedIn: 'https://www.linkedin.com/in/mihir-singh-63a83431a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+  },
+    {
+    name: 'Luv Sharma',
+    role: 'Mentor',
+    image: 'mihir2.jpg',
+    description: '',
+    linkedIn: 'https://www.linkedin.com/in/mihir-singh-63a83431a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+  },
   {
     name: 'Mihir Singh',
     role: 'Team Lead',
@@ -75,14 +89,14 @@ const teamMembers = [
 ];
 
 // Define keyframes for the animation
-const slideAnimation = keyframes`
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-`;
+// const slideAnimation = keyframes`
+//   0% {
+//     transform: translateX(0);
+//   }
+//   100% {
+//     transform: translateX(-100%);
+//   }
+// `;
 
 export default function Aboutpage() {
   const settings = {

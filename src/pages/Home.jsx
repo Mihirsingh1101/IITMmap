@@ -8,7 +8,7 @@ function Home() {
     <div>
         
         <ActionAreaCardCarousel />
-        <ModelView/>
+        <ModelView />
         <Footer />
       </div>
   );
