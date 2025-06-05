@@ -1,126 +1,126 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+// src/components/ResponsiveAppBar.jsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import CampusToggle from './CampusToggle';
 
-const drawerWidth = 240;
 const navItems = [
   { label: 'Home', url: '/' },
   { label: 'About', url: '/about' },
-  // { label: 'Contact', url: '/contact' }
 ];
 
-function DrawerAppBar(props) {
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const navigate = useNavigate(); // Initialize navigate
+function ResponsiveAppBar({ currentCampus, onCampusChange }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
-    setMobileOpen((prevState) => !prevState);
+    setMobileOpen(!mobileOpen);
   };
 
   const handleNavigation = (url) => {
-    navigate(url); // Use navigate to change routes
+    navigate(url);
+    if (mobileOpen) setMobileOpen(false);
   };
 
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2, color: '#fff' }}>
-        <img src={'IIT_logo.png'} alt="IIT Logo" style={{ width: '40px', height: '30px' }} />
-      </Typography>
-      <Divider sx={{ borderColor: '#fff' }} />
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item.label} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }} onClick={() => handleNavigation(item.url)}>
-              <ListItemText primary={item.label} sx={{ color: '#fff' }} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
-
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const drawerVariants = {
+    hidden: { x: '-100%' },
+    visible: { x: '0%', transition: { type: 'tween', duration: 0.3 } },
+    exit: { x: '-100%', transition: { type: 'tween', duration: 0.3 } },
+  };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar
-        component="nav"
-        sx={{
-          backgroundColor: '#002b36',
-          boxShadow: 'none',
-          backdropFilter: 'blur(10px)', // Adds slight blur effect for a modern look
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+    <>
+      <header className="bg-brand-primary/90 backdrop-blur-sm text-white sticky top-0 z-50 shadow-md h-16"> {/* Fixed height */}
+        <div className="container mx-auto px-4 h-full">
+          <div className="flex items-center justify-between h-full">
+            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
+              <img src={'/IIT_logo.png'} alt="IIT Logo" className="h-8 w-auto md:h-10" />
+              <span className="hidden md:block text-xl font-semibold tracking-tight">
+                IIT Mandi Navigator
+              </span>
+            </div>
+
+            <div className="hidden sm:flex items-center space-x-4 md:space-x-6">
+              {navItems.map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => handleNavigation(item.url)}
+                  className="px-3 py-2 rounded-md text-sm font-medium hover:bg-white/15 transition-colors"
+                >
+                  {item.label}
+                </button>
+              ))}
+              {onCampusChange && currentCampus && (
+                <CampusToggle currentCampus={currentCampus} onCampusChange={onCampusChange} />
+              )}
+            </div>
+
+            <div className="sm:hidden">
+              <button
+                onClick={handleDrawerToggle}
+                className="p-2 rounded-md hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                aria-label="Open main menu"
+              >
+                {mobileOpen ? (
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={drawerVariants}
+            className="sm:hidden fixed inset-0 z-40"
+            aria-modal="true"
           >
-            <MenuIcon />
-          </IconButton>
-          <img src={'IIT_logo.png'} alt="IIT Logo" style={{ width: '60px', height: 'auto', marginRight: '16px' }} />
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-          </Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {navItems.map((item) => (
-              <Button key={item.label} sx={{ color: '#fff', fontSize: '16px' }} onClick={() => handleNavigation(item.url)}>
-                {item.label}
-              </Button>
-            ))}
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <nav>
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: drawerWidth,
-              backgroundColor: '#002b36',
-              color: '#fff',
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </nav>
-    </Box>
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true" onClick={handleDrawerToggle}></div>
+            <div className="fixed top-0 left-0 h-full w-64 bg-brand-primary shadow-xl p-4">
+              <div className="flex items-center justify-between mb-6">
+                <img src={'/IIT_logo.png'} alt="IIT Logo" className="h-8 w-auto" />
+                <button onClick={handleDrawerToggle} className="p-1 text-gray-300 hover:text-white">
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <nav className="flex flex-col space-y-2">
+                {navItems.map((item) => (
+                  <button
+                    key={item.label}
+                    onClick={() => handleNavigation(item.url)}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:bg-white/15 hover:text-white transition-colors text-left"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                 {onCampusChange && currentCampus && (
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                     <span className="block px-3 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">Campus</span>
+                    <div className="mt-2">
+                      <CampusToggle currentCampus={currentCampus} onCampusChange={onCampusChange} />
+                    </div>
+                  </div>
+                )}
+              </nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
-DrawerAppBar.propTypes = {
-  window: PropTypes.func,
-};
-
-export default DrawerAppBar;
+export default ResponsiveAppBar;
