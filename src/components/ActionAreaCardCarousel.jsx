@@ -117,7 +117,8 @@ export default function ActionAreaCardCarousel() {
           </p>
         </div>
 
-        <div className="carousel-outer-container w-full lg:w-3/5 h-[400px] md:h-[450px] flex items-center justify-center -mt-12 lg:-mt-16 relative">
+        {/* Move carousel upward by adding a larger negative margin-top */}
+        <div className="carousel-outer-container w-full lg:w-3/5 h-[400px] md:h-[450px] flex items-center justify-center -mt-24 lg:-mt-32 relative">
 
           <div className="carousel-inner-container relative w-full h-full" style={{ perspective: isMobile ? '500px' : '800px' }}>
             {cardsData.map((card, index) => (

@@ -19,16 +19,16 @@ const teamMembers = [
     {
     name: 'Vaibhav Khesharwani',
     role: 'Mentor',
-    image: 'mihir2.jpg',
+    image: 'vaibhav.jpg',
     description: '',
-    linkedIn: 'https://www.linkedin.com/in/mihir-singh-63a83431a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+    linkedIn: 'https://www.linkedin.com/in/born-engineer73/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
     {
     name: 'Luv Sharma',
     role: 'Mentor',
-    image: 'mihir2.jpg',
+    image: 'luv_sharma.jpeg',
     description: '',
-    linkedIn: 'https://www.linkedin.com/in/mihir-singh-63a83431a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+    linkedIn: 'https://www.linkedin.com/in/luvsharmaa/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
   },
   {
     name: 'Mihir Singh',
