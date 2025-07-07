@@ -233,7 +233,7 @@ const northCampusData = {
 // --- SOUTH CAMPUS DATA (Placeholder - You need to provide this) ---
 const southCampusData = {
   buildingCoordinates: {
-    "SC_Admin_Block": [500, 20, 50],
+    "SC_Admin_Block": [0, 0, 0],
     "SC_Lecture_Hall_1": [550, 25, 100],
     "SC_Hostel_Alpha": [480, 20, 150],
    

@@ -17,7 +17,7 @@ import {
 
 const MODEL_PATHS = {
   North: '/final.glb',
-  South: '/south_final.glb',
+  South: '/south_005.glb',
 };
 
 function ModelView({ currentCampus = 'North' }) {
