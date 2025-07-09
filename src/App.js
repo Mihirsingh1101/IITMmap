@@ -1,31 +1,24 @@
+
 import './App.css';
-import ModelView from './pages/modelView';
-import Grid from '@mui/material/Grid2';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
+import Home from './pages/Home';
 import ResponsiveAppBar from './components/ResponsiveAppBar';
-import AnchorTemporaryDrawer from './components/AnchorTemporaryDrawer';
- 
+import Aboutpage from './pages/Aboutpage'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';    
+import { element } from 'three/webgpu';
 
 function App() {
   return (
-    <div className="App">
-      <ResponsiveAppBar/>
-      <AnchorTemporaryDrawer/>
-       <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={2}>
-        <Grid size={8}>
-          firsts
-        <ModelView/>
-        </Grid>
-        <Grid size={4}>
-          other filds
-        </Grid>
-         
-      </Grid>
-    </Box>
-     
+    <div className="App  ">
+      {/* Content layers on top */}
+      <div className="content-container">
+        <Router>
+        <ResponsiveAppBar/>
+            <Routes>
+            <Route path='/' element={ <Home/> } ></Route>
+            <Route path='/about' element={<Aboutpage/>} ></Route>
+          </Routes>
+        </Router>
+      </div>
     </div>
   );
 }

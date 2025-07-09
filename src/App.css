@@ -1,6 +1,29 @@
+/* Ensure the App takes up the full viewport */
 .App {
-  text-align: center;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
+
+/* Ensure the particles cover the entire page in the background */
+.particles-background {
+  position: fixed; /* Fixed position so it stays in the background */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  z-index: -1; /* Push the particles behind other elements */
+  pointer-events: none; /* Prevent any interaction with particles */
+}
+
+/* Ensure the content is stacked above the particles */
+.content-container {
+  z-index: 1; /* Make sure content is above the particles */
+  position: relative;
+  width: 100%;
+}
+
 
 .App-logo {
   height: 40vmin;
@@ -35,4 +58,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.particles-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -50; /* Push it to the background */
+}
+
+.content-container {
+  position: relative;
+  z-index: 1; /* Ensure content is above particles */
 }
